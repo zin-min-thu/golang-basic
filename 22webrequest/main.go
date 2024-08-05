@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
 func main() {
-	fmt.Println("Welcome GET request in golang")
+	fmt.Println("Welcome web requests in golang")
 
 	// PerformGetRequest()
 
-	PerformPostJsonRequest()
+	// PerformPostJsonRequest()
+
+	PerformPostFormRequest()
 }
 
 func PerformGetRequest() {
@@ -43,6 +46,7 @@ func PerformGetRequest() {
 func PerformPostJsonRequest() {
 	const myurl = "http://localhost:8001/api/post"
 
+	// json data
 	requestBody := strings.NewReader(`
 		{
 			"coursename" : "Let's go with golang",
@@ -52,6 +56,29 @@ func PerformPostJsonRequest() {
 	`)
 
 	response, err := http.Post(myurl, "application/json", requestBody)
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer response.Body.Close()
+
+	content, _ := ioutil.ReadAll(response.Body)
+
+	fmt.Println(string(content))
+}
+
+func PerformPostFormRequest() {
+	const myurl = "http://localhost:8001/api/postform"
+
+	// formdata
+
+	data := url.Values{}
+	data.Add("firstname", "Ko")
+	data.Add("lastname", "Tommy")
+	data.Add("email", "Tommy@gmail.com")
+
+	response, err := http.PostForm(myurl, data)
 
 	if err != nil {
 		panic(err)
