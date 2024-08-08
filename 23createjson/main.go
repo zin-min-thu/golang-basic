@@ -16,7 +16,8 @@ type course struct {
 func main() {
 	fmt.Println("Learn JSON in golang")
 
-	EncodeJson()
+	// EncodeJson()
+	DecodJson()
 }
 
 func EncodeJson() {
@@ -36,4 +37,37 @@ func EncodeJson() {
 
 	fmt.Printf("%s\n", finalJson)
 
+}
+
+func DecodJson() {
+	jsonDataFromWeb := []byte(`
+		{
+			"coursename": "ReactJs Bootcamp",
+			"Price": 222,
+			"website": "Google.com",
+			"tags": ["Web-dev","js"]
+        }
+	`)
+
+	var locCourse course
+
+	checkValid := json.Valid(jsonDataFromWeb)
+
+	if checkValid {
+		fmt.Println("Valid Json Format")
+		json.Unmarshal(jsonDataFromWeb, &locCourse)
+
+		fmt.Printf("%#v\n", locCourse)
+	} else {
+		fmt.Println("Invalid json fromat")
+	}
+
+	// key value
+	var myOnlineData map[string]interface{}
+	json.Unmarshal(jsonDataFromWeb, &myOnlineData)
+	fmt.Printf("%#v\n", myOnlineData)
+
+	for k, v := range myOnlineData {
+		fmt.Printf("Key is %v and value is %v and Type is: %T\n", k, v, v)
+	}
 }
